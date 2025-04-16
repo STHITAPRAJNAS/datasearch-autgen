@@ -35,5 +35,3 @@ settings = Settings(
     database_name=config['database']['name'],
     log_level=config['application']['log_level'],
 )
-
-settings = Settings()

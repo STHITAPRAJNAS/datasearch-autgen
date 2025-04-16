@@ -1,17 +1,29 @@
-[tool.poetry]
-name = "python-flask"
+[project]
+name = "bedrock_app"
 version = "0.1.0"
-description = "Start a simple web app with the Flask framework for Python"
-authors = ["Google LLC"]
-packages = [{include = "src"}]
+description = "A Python application interacting with AWS Bedrock for AI-powered features."
+authors = [
+    { name = "Your Name", email = "your.email@example.com" }
+]
+requires-python = ">=3.9"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "pydantic",
+    "pyyaml",
+    "autogen",
+    "boto3"
+]
 
-[tool.poetry.dependencies]
-python = "^3.11"
-Flask = "^3.0.1"
+
+[tool.poetry]
+name = "bedrock_app"
+version = "0.1.0"
+packages = [{ include = "src" }]
 
 [tool.poetry.scripts]
-app = 'src.main:main'
+app = "src.main:app"
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core"] 
 build-backend = "poetry.core.masonry.api"

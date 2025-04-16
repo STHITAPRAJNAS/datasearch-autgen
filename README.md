@@ -1,37 +1,38 @@
-# Intelligent Conversational App with Autogen and Bedrock
+
+# Bedrock Multi-Agent Conversational Application
 
 ## Project Description
 
-This project demonstrates the creation of an intelligent conversational application capable of interacting with multiple data sources, including Confluence, Databricks, and external GraphQL APIs. It leverages the power of:
+This project showcases the development of an intelligent conversational application that interacts with multiple data sources, including Confluence, Databricks, and external GraphQL APIs. The application leverages advanced technologies to provide a seamless conversational experience:
 
-*   **FastAPI:** For efficient and modern API management.
-*   **Autogen:** For creating intelligent agents that can collaborate and perform complex tasks.
-*   **Bedrock:** To utilize advanced large language models for text generation, reasoning, and code generation (e.g., SQL, GraphQL).
+*   **FastAPI**: For building a high-performance RESTful API.
+*   **Autogen**: For orchestrating intelligent, collaborative agents.
+*   **AWS Bedrock**: For advanced text generation, reasoning, and code generation using large language models.
+*   **Pgvector**: For managing embeddings and similarity searches.
+* **Uvicorn**: for runing the application.
+* **Poetry**: for dependencies management.
 
-The application is designed to retrieve information, execute queries, and generate responses based on natural language inputs from the user, orchestrating interactions between different agents to handle diverse requests.
-
-**This is the final version of the app, all requirements have been implemented.**
+The application is designed to retrieve information, execute queries, and generate responses based on natural language inputs. It coordinates interactions between specialized agents to fulfill diverse user requests.
 
 ## Features
 
-*   **Conversational Interface:** Natural language interaction using Autogen agents.
-*   **Confluence Integration:** Retrieve data from Confluence using PGVector for similarity search.
-*   **Databricks Integration:** Retrieve data from Databricks via SQL.
-*   **GraphQL API Integration:** Connect and interact with external GraphQL services.
-*   **Bedrock Models:** Leverage Bedrock for text generation, reasoning, and SQL/GraphQL query creation.
-*   **Agentic Architecture:** Modular design with agents specializing in different tasks.
-*   **FastAPI:** Efficient and modern API management using FastAPI.
-*   **Long Term Memory**: The application uses state management to maintain the context of the conversations.
-* **Conversation history**: You can now see the conversation history with an endpoint.
+*   **Natural Language Interface**: Interact with the application using natural language, powered by Autogen.
+*   **Confluence Integration**: Query and retrieve information from Confluence using Pgvector for efficient similarity searches.
+*   **Databricks Integration**: Execute SQL queries on Databricks to extract and process data.
+*   **GraphQL API Integration**: Connect and interact with external GraphQL services to fetch data.
+*   **AWS Bedrock LLMs**: Utilize AWS Bedrock's large language models for advanced text generation, reasoning, and code generation (SQL/GraphQL).
+*   **Agent Collaboration**: A modular architecture where agents collaborate to perform complex tasks.
+*   **FastAPI API**: A high-performance, modern API built with FastAPI.
+* **State Management**: Maintain conversation context across multiple interactions.
+* **Conversation History**: Retrieve and view conversation history.
 
 ## Prerequisites
 
-*   Python 3.9+
-*   Poetry for dependency management.
-*   Access to Anthropic Bedrock models.
-*   PGVector database with Confluence embeddings (optional, if using the Confluence integration).
-*   Databricks cluster access (optional, if using the Databricks integration).
-*   External GraphQL API access (optional, if using the GraphQL integration).
+Before you begin, ensure you have the following:
+
+*   **Python 3.9+**: Ensure you have Python 3.9 or higher installed.
+*   **Poetry**: Install Poetry for managing project dependencies:
+    
 
 ## Installation
 
