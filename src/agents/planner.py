@@ -1,6 +1,6 @@
 from autogen import AssistantAgent
-from src.utils.bedrock_utils import BedrockAgent as BedrockHelper
 from src.utils.logger import logger
+
 
 class PlannerAgent(AssistantAgent):
     
@@ -13,15 +13,12 @@ class PlannerAgent(AssistantAgent):
         self.bedrock_client = bedrock_client
         self.model_id = model_id
 
-    def generate_plan(self, message):
+    async def generate_plan(self, message):
         try:
           logger.info(f"Generating plan for message: {message}")
-          bedrock_agent = BedrockHelper(self.bedrock_client, self.model_id, "")
-          plan = bedrock_agent.generate_plan(message)
+          plan = await self.bedrock_agent.generate_plan(message)
           self.state_manager.store_state("", "", self.__class__.__name__, plan)
           return plan
         except Exception as e:
           logger.error(f"Error generating plan: {e}")
           return "Error generating plan"
-
-

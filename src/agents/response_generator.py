@@ -1,4 +1,5 @@
 from autogen import AssistantAgent
+from src.utils.bedrock_utils import BedrockAgent
 from src.utils.logger import logger
 
 
@@ -13,11 +14,11 @@ class ResponseGeneratorAgent(AssistantAgent):
         self.bedrock_client = bedrock_client
         self.model_id = model_id
 
-    def generate_response(self, messages):
+    async def a_generate_response(self, messages):
         try:
-            logger.info(f"ResponseGeneratorAgent.generate_response called with messages: {messages}")
-            bedrock_agent = BedrockAgent(self.bedrock_client, self.model_id, "")
-            response = bedrock_agent.generate_response(messages)
+            logger.info(f"ResponseGeneratorAgent.a_generate_response called with messages: {messages}")
+            bedrock_agent = BedrockAgent(self.bedrock_client)
+            response = await bedrock_agent.a_generate_response(messages)
             self.state_manager.store_state("", "", self.__class__.__name__, response)
             return response
         except Exception as e:

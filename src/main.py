@@ -1,4 +1,6 @@
 import uuid
+
+import boto3
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from src.config import settings
@@ -19,19 +21,21 @@ from autogen import GroupChat, GroupChatManager, UserProxyAgent, ConversableAgen
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    bedrock_client = boto3.client("bedrock-runtime", region_name="us-east-1")
     state_manager = StateManager()
     app.state.state_manager = state_manager
-    bedrock_agent = BedrockAgent(settings.bedrock_client, settings.model_id, settings.embedding_model_id)
+    bedrock_agent = BedrockAgent(bedrock_client)
     pgvector_service = PGVectorService()
-    databricks_service = DatabricksService()
-    graphql_service = GraphqlService()
+    databricks_service = DatabricksService() 
+    graphql_service = GraphqlService() 
 
-    planner_agent = PlannerAgent(state_manager, bedrock_agent.client, bedrock_agent.model_id)
-    confluence_agent = ConfluenceAgent(pgvector_service, state_manager, bedrock_agent.client, bedrock_agent.model_id)
-    databricks_agent = DatabricksAgent(databricks_service, state_manager, bedrock_agent.client, bedrock_agent.model_id)
-    graphql_agent = GraphqlAgent(graphql_service, state_manager, bedrock_agent.client, bedrock_agent.model_id)
-    response_generator_agent = ResponseGeneratorAgent(state_manager, bedrock_agent.client, bedrock_agent.model_id)
+    planner_agent = PlannerAgent(state_manager, bedrock_agent.bedrock_client, bedrock_agent.model_id)
+    confluence_agent = ConfluenceAgent(pgvector_service, state_manager, bedrock_agent.bedrock_client, bedrock_agent.model_id,bedrock_agent.embedding_model_id)
+    databricks_agent = DatabricksAgent(databricks_service, state_manager, bedrock_agent.bedrock_client, bedrock_agent.model_id, "")
+    graphql_agent = GraphqlAgent(graphql_service, state_manager, bedrock_agent.bedrock_client, bedrock_agent.model_id, "")
+    response_generator_agent = ResponseGeneratorAgent(state_manager, bedrock_agent.bedrock_client, bedrock_agent.model_id)
 
+   
     # Create a list of all agents
     agents = [planner_agent, confluence_agent, databricks_agent, graphql_agent, response_generator_agent]
     human_proxy_agent = UserProxyAgent(
@@ -44,7 +48,7 @@ async def lifespan(app: FastAPI):
 
     # Create a GroupChat instance with the agents
     groupchat = GroupChat(agents=agents + [human_proxy_agent], messages=[], max_round=100)
-
+    
     # Create a GroupChatManager instance with the groupchat
     group_chat_manager = GroupChatManager(groupchat=groupchat, llm_config=False)
 
@@ -69,7 +73,7 @@ async def chat(request: ChatRequest):
         group_chat_manager: GroupChatManager = app.state.group_chat_manager
         human_proxy_agent: UserProxyAgent = app.state.human_proxy_agent
         state_manager.store_state(request.user_id, request.conversation_id, "user_message", request.message)
-        human_proxy_agent.initiate_chat(group_chat_manager, message=request.message)
+        await human_proxy_agent.a_initiate_chat(group_chat_manager, clear_history=True, message=request.message)
         return {"message": "Chat initiated."}
     except Exception as e:
         error_id = str(uuid.uuid4())  # Generate a unique error ID
