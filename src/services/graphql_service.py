@@ -1,14 +1,22 @@
+from src.utils.logger import logger
+
+
 class GraphqlService:
     def __init__(self):
         # Logic to connect to the GraphQL endpoint. Placeholder.
-        print("Connecting to GraphQL endpoint... (Placeholder)")
-        self.connection = "GraphQL Connection Placeholder"
-        
+        logger.info("Connecting to GraphQL endpoint... (Placeholder)")
+        self.connection = "GraphQL Connection Placeholder"  # Placeholder
 
-    def execute_graphql_query(self, graphql_query):
-        # Logic to execute the GraphQL query against the endpoint. Placeholder.
-        print(f"Executing GraphQL query: {graphql_query} (Placeholder)")
-        # In a real implementation, you would use a GraphQL client here.
-        # For example:
-        # result = graphql_client.execute(graphql_query)
-        return f"GraphQL query result for : {graphql_query} (placeholder)"
+    def execute_graphql_query(self, query):
+        try:
+            logger.info(f"Executing GraphQL query: {query} (Placeholder)")
+
+            # Use a GraphQL client here
+            # response = graphql_client.execute(query)
+            # return response.json()
+
+            response = f"GraphQL query result for : {query} (placeholder)"
+            return response
+        except Exception as e:
+            logger.error(f"Error executing GraphQL query: {e}")
+            return "Error executing graphql query"

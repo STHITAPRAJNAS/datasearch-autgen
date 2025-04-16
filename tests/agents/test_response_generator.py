@@ -1,27 +1,28 @@
 import pytest
-from unittest.mock import MagicMock, call
-from src.agents.response_generator import ResponseGenerator
-from src.utils.bedrock_utils import BedrockAgent
+from unittest.mock import MagicMock
+from src.agents.response_generator import ResponseGeneratorAgent
+from src.utils.state_management import StateManager
 
 
 @pytest.fixture
-def mock_bedrock_agent():
-    mock_bedrock = MagicMock()
-    mock_bedrock.invoke = MagicMock()
-    return mock_bedrock
+def state_manager():
+    return StateManager()
 
 
 @pytest.fixture
-def response_generator(mock_bedrock_agent):
-    return ResponseGenerator(None, mock_bedrock_agent, "test_model_id", "test_prompt")
+def response_generator(state_manager):
+    mock_bedrock_client = MagicMock()
+    mock_model_id = "model_id"
+    return ResponseGeneratorAgent(state_manager, mock_bedrock_client, mock_model_id)
 
 
-def test_generate_response_calls_bedrock(response_generator, mock_bedrock_agent):
-    # Arrange
-    mock_bedrock_agent.invoke.return_value = "mocked response"
+def test_generate_response(response_generator):
+    # Mock bedrock_agent.generate_response
+    response_generator.bedrock_client.generate_response = MagicMock(return_value="Mock Response")
 
-    # Act
-    response_generator.generate_response([], "")
+    # Call generate_response
+    response = response_generator.generate_response("Test messages")
 
-    # Assert
-    mock_bedrock_agent.invoke.assert_called_once()
+    # Assertions
+    response_generator.bedrock_client.generate_response.assert_called_once_with("Test messages")
+    assert response == "Mock Response"
